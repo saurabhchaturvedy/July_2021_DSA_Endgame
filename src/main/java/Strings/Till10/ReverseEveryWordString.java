@@ -7,7 +7,7 @@ public class ReverseEveryWordString {
 
     public static String reverseIndividualWord(String str) {
 
-        String finalStr = "";
+         String finalStr = "";
         String tempStr = "";
 
         for(int i = 0; i < str.length(); i++) {
