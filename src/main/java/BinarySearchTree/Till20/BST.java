@@ -1,4 +1,9 @@
-package BinarySearchTree.Till10;
+package BinarySearchTree.Till20;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class BST {
 
@@ -138,6 +143,52 @@ public class BST {
     }
 
 
+    private static int getMax(Node node) {
+        if (node == null) {
+            System.out.println("tree is empty");
+            return -1;
+        }
+
+        if (node.right != null) {
+            node = node.right;
+        }
+
+        return node.data;
+    }
+
+    private static int getMin(Node node) {
+        if (node == null) {
+            System.out.println("tree is empty");
+            return -1;
+        }
+
+        if (node.left != null) {
+            node = node.left;
+        }
+
+        return node.data;
+    }
+
+
+    private static boolean ifPairExists(Node node, int sum, Set<Integer> set) {
+        if (node == null) {
+            return false;
+        }
+
+        if (set.contains(sum - node.data)) {
+            return true;
+        }
+
+        set.add(node.data);
+
+        if (!ifPairExists(node.left, sum, set)) {
+            return false;
+        }
+
+        return ifPairExists(node.right, sum, set);
+    }
+
+
     private static void printBST(Node node) {
         if (node == null)
             return;
@@ -197,55 +248,55 @@ public class BST {
     }
 
 
-    private static Node getInorderParent(Node node, int val) {
-        if (node == null) {
-            return null;
-        }
+    private static boolean doesTripletExists(Node node, int sum) {
+        List<Integer> integerList = new ArrayList<>();
+        inorder(node, integerList);
+        return checkIfTripletExists(integerList, sum);
+    }
 
-        Node inorderParent = null;
+    private static boolean checkIfTripletExists(List<Integer> integerList, int sum) {
 
-        while (node != null) {
-            if (val < node.data) {
-                inorderParent = node;
-                node = node.left;
-            } else if (val > node.data) {
-                node = node.right;
-            } else {
-                break;
+        int size = integerList.size();
+        int currentSum = 0;
+
+        for (int i = 0; i < size - 2; i++) {
+
+            int j = i + 1;
+            int k = size - 1;
+
+            while (j < k) {
+                currentSum = integerList.get(i) + integerList.get(j) + integerList.get(k);
+
+                if (currentSum == sum) {
+                    return true;
+                } else if (currentSum < sum) {
+                    i++;
+                } else {
+                    j--;
+                }
+
             }
         }
 
+        return false;
+    }
 
-        return node != null ? inorderParent : null;
+    private static void inorder(Node node, List<Integer> integerList) {
+        if (node == null) {
+            return;
+        }
+
+        inorder(node.left, integerList);
+        integerList.add(node.data);
+        inorder(node.right, integerList);
     }
 
 
-    private static Node getInorderSuccessor(Node node, int val) {
+    private static int getEvenOddNodes(Node node) {
+        if (node == null) return 0;
 
-        if (node == null) {
-            return null;
-        }
+        return node.data - getEvenOddNodes(node.left) - getEvenOddNodes(node.right);
 
-        Node inorderSuccessor = null;
-
-        while (node != null) {
-
-            if (val < node.data) {
-                inorderSuccessor = node;
-                node = node.left;
-            } else if (val > node.data) {
-                node = node.right;
-            } else {
-
-                if (node.right != null) {
-                    inorderSuccessor = getSuccessor(node);
-                }
-
-                break;
-            }
-        }
-
-        return node != null ? inorderSuccessor : null;
     }
 
 
@@ -265,5 +316,9 @@ public class BST {
         System.out.println(bst.search(root, 8));
         System.out.println("parent node " + getParentNode(root, 8).data);
         System.out.println(getSibling(root, 3).data);
+        System.out.println(getMax(root));
+        System.out.println(getMin(root));
+        Set<Integer> integers = new HashSet<>();
+        System.out.println(ifPairExists(root, 10, integers));
     }
 }
